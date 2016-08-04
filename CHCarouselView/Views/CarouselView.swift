@@ -8,14 +8,40 @@
 
 import UIKit
 
-class CarouselView: UIScrollView {
+public class CarouselView: UIScrollView {
+    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet public var views: [UIView] = []
+    
+    public var currentPage: Int = 0
+    public var selectedCallback: ((currentPage: Int) -> ())?
 
-    /*
-    // Only override drawRect: if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func drawRect(rect: CGRect) {
-        // Drawing code
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.configure()
     }
-    */
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.configure()
+    }
+    
+    override public func drawRect(rect: CGRect) {
+    }
+    
+    // MARK: - Private Methods
+    private func configure() {
+        self.delegate = self
+        self.pagingEnabled = true
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
+        self.scrollsToTop = false
+    }
+}
 
+extension CarouselView: UIScrollViewDelegate {
+    public func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+    }
 }
