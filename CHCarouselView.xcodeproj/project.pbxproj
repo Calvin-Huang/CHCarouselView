@@ -14,6 +14,7 @@
 		18EA45581D53C8EB005A8A64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18EA45561D53C8EB005A8A64 /* LaunchScreen.storyboard */; };
 		18EA45631D53C8EB005A8A64 /* CHCarouselViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EA45621D53C8EB005A8A64 /* CHCarouselViewTests.swift */; };
 		18EA456E1D53C8EB005A8A64 /* CHCarouselViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EA456D1D53C8EB005A8A64 /* CHCarouselViewUITests.swift */; };
+		18EA457D1D53CA2A005A8A64 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EA457C1D53CA2A005A8A64 /* CarouselView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		18EA45691D53C8EB005A8A64 /* CHCarouselViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CHCarouselViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EA456D1D53C8EB005A8A64 /* CHCarouselViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CHCarouselViewUITests.swift; sourceTree = "<group>"; };
 		18EA456F1D53C8EB005A8A64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18EA457C1D53CA2A005A8A64 /* CarouselView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CarouselView.swift; path = Views/CarouselView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 		18EA454C1D53C8EA005A8A64 /* CHCarouselView */ = {
 			isa = PBXGroup;
 			children = (
+				18EA457B1D53CA08005A8A64 /* Views */,
 				18EA454D1D53C8EA005A8A64 /* AppDelegate.swift */,
 				18EA454F1D53C8EB005A8A64 /* ViewController.swift */,
 				18EA45511D53C8EB005A8A64 /* Main.storyboard */,
@@ -123,6 +126,14 @@
 				18EA456F1D53C8EB005A8A64 /* Info.plist */,
 			);
 			path = CHCarouselViewUITests;
+			sourceTree = "<group>";
+		};
+		18EA457B1D53CA08005A8A64 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				18EA457C1D53CA2A005A8A64 /* CarouselView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18EA45501D53C8EB005A8A64 /* ViewController.swift in Sources */,
+				18EA457D1D53CA2A005A8A64 /* CarouselView.swift in Sources */,
 				18EA454E1D53C8EA005A8A64 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,6 +494,7 @@
 				18EA45741D53C8EB005A8A64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18EA45751D53C8EB005A8A64 /* Build configuration list for PBXNativeTarget "CHCarouselViewTests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +503,7 @@
 				18EA45771D53C8EB005A8A64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		18EA45781D53C8EB005A8A64 /* Build configuration list for PBXNativeTarget "CHCarouselViewUITests" */ = {
 			isa = XCConfigurationList;
@@ -498,6 +512,7 @@
 				18EA457A1D53C8EB005A8A64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
