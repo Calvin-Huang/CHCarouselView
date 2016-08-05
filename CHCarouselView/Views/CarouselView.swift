@@ -9,10 +9,28 @@
 import UIKit
 
 public class CarouselView: UIScrollView {
-    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var pageControl: UIPageControl?
     @IBOutlet public var views: [UIView] = []
     
-    public var currentPage: Int = 0
+    public var currentPage: Int {
+        set {
+            switch pageControl {
+            case .None:
+                self.currentPage = newValue
+            case .Some(let pageControl):
+                pageControl.currentPage = newValue
+            }
+        }
+        
+        get {
+            switch pageControl {
+            case .None:
+                return self.currentPage
+            case .Some(let pageControl):
+                return pageControl.currentPage
+            }
+        }
+    }
     public var selectedCallback: ((currentPage: Int) -> ())?
 
     override public init(frame: CGRect) {
@@ -35,6 +53,8 @@ public class CarouselView: UIScrollView {
             self.addSubview(view)
         }
         
+        pageControl?.numberOfPages = views.count
+        
         self.contentSize = CGSize(width: CGFloat(views.count) * self.bounds.width, height: self.bounds.height)
     }
     
@@ -50,6 +70,7 @@ public class CarouselView: UIScrollView {
 
 extension CarouselView: UIScrollViewDelegate {
     public func scrollViewDidScroll(scrollView: UIScrollView) {
-        
+        let remainder: CGFloat = scrollView.contentOffset.x % self.bounds.width
+        currentPage = Int(scrollView.contentOffset.x / self.bounds.size.width + ((remainder > self.bounds.size.width / 2) ? 1 : 0))
     }
 }
