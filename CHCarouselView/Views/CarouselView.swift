@@ -28,6 +28,14 @@ public class CarouselView: UIScrollView {
     }
     
     override public func drawRect(rect: CGRect) {
+        views.enumerate().forEach { (index: Int, view: UIView) in
+            let viewOffset = CGPoint(x: CGFloat(index) * self.bounds.width, y: 0)
+            view.frame = CGRect(origin: viewOffset, size: self.bounds.size)
+            
+            self.addSubview(view)
+        }
+        
+        self.contentSize = CGSize(width: CGFloat(views.count) * self.bounds.width, height: self.bounds.height)
     }
     
     // MARK: - Private Methods
