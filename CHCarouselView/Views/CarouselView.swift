@@ -46,12 +46,14 @@ public class CarouselView: UIScrollView {
     }
     
     override public func drawRect(rect: CGRect) {
-        views.enumerate().forEach { (index: Int, view: UIView) in
-            let viewOffset = CGPoint(x: CGFloat(index) * self.bounds.width, y: 0)
-            view.frame = CGRect(origin: viewOffset, size: self.bounds.size)
+        views
+            .enumerate()
+            .forEach { (index: Int, view: UIView) in
+                let viewOffset = CGPoint(x: CGFloat(index) * self.bounds.width, y: 0)
+                view.frame = CGRect(origin: viewOffset, size: self.bounds.size)
             
-            self.addSubview(view)
-        }
+                self.addSubview(view)
+            }
         
         pageControl?.numberOfPages = views.count
         
