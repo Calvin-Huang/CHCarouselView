@@ -12,6 +12,32 @@ public class CarouselView: UIScrollView {
     @IBOutlet weak var pageControl: UIPageControl?
     @IBOutlet public var views: [UIView] = []
     
+    enum ScrollDirection {
+        case None
+        case Top
+        case Right
+        case Down
+        case Left
+        
+        init(fromPoint: CGPoint, toPoint: CGPoint) {
+            if fromPoint.x - toPoint.x < 0 && fromPoint.y == toPoint.y {
+                self = .Left
+                
+            } else if fromPoint.x - toPoint.x > 0 && fromPoint.y == toPoint.y {
+                self = .Right
+                
+            } else if fromPoint.x == toPoint.x && fromPoint.y - toPoint.y < 0 {
+                self = .Down
+                
+            } else if fromPoint.x == toPoint.x && fromPoint.y - toPoint.y > 0 {
+                self = .Top
+                
+            } else {
+                self = .None
+            }
+        }
+    }
+    
     public var currentPage: Int {
         set {
             switch pageControl {
@@ -45,6 +71,10 @@ public class CarouselView: UIScrollView {
         self.configure()
     }
     
+    deinit {
+        self.removeObserver(self, forKeyPath: "contentOffset")
+    }
+    
     override public func drawRect(rect: CGRect) {
         views
             .enumerate()
@@ -60,6 +90,15 @@ public class CarouselView: UIScrollView {
         self.contentSize = CGSize(width: CGFloat(views.count) * self.bounds.width, height: self.bounds.height)
     }
     
+    // MARK: - KVO Delegate
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if keyPath == "contentOffset" {
+            
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
+    
     // MARK: - Private Methods
     private func configure() {
         self.delegate = self
@@ -67,9 +106,12 @@ public class CarouselView: UIScrollView {
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
         self.scrollsToTop = false
+        
+        self.addObserver(self, forKeyPath: "contentOffset", options: .Old, context: nil)
     }
 }
 
+// MARK: - ScrollViewDelegate
 extension CarouselView: UIScrollViewDelegate {
     public func scrollViewDidScroll(scrollView: UIScrollView) {
         let remainder: CGFloat = scrollView.contentOffset.x % self.bounds.width
