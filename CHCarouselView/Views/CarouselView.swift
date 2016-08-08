@@ -133,6 +133,16 @@ public class CarouselView: UIScrollView {
             break
         }
     }
+    
+    private func resetInfiniteContentShift() {
+        views
+            .enumerate()
+            .forEach { (index: Int, view: UIView) in
+                let indexShiftted = isInfinite ? index + 1 : index
+                let viewOffset = CGPoint(x: CGFloat(indexShiftted) * self.bounds.width, y: 0)
+                view.frame = CGRect(origin: viewOffset, size: self.bounds.size)
+            }
+    }
 }
 
 // MARK: - ScrollViewDelegate
