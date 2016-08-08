@@ -91,7 +91,10 @@ public class CarouselView: UIScrollView {
         
         pageControl?.numberOfPages = views.count
         
-        self.contentSize = CGSize(width: CGFloat(views.count) * self.bounds.width, height: self.bounds.height)
+        let viewsCountWithInfiniteMock = (canInfinite ? 2 : 0) + views.count
+        
+        self.contentSize = CGSize(width: CGFloat(viewsCountWithInfiniteMock) * self.bounds.width, height: self.bounds.height)
+        self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPointZero
     }
     
     // MARK: - KVO Delegate
