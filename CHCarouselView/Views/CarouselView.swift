@@ -101,7 +101,6 @@ public class CarouselView: UIScrollView {
     override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
         // Check condition with tracking for only prepare view when still scrolling.
-        if keyPath == "contentOffset" && isInfinite && self.tracking {
         if keyPath == "contentOffset" && canInfinite && self.tracking {
             guard let change = change, let oldOffset = change[NSKeyValueChangeOldKey]?.CGPointValue() else {
                 return
