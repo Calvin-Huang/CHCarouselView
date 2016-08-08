@@ -95,8 +95,9 @@ public class CarouselView: UIScrollView {
     // MARK: - KVO Delegate
     override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
-        if keyPath == "contentOffset" && isInfinite {
-            guard let change = change, let oldOffset = change[NSKeyValueChangeOldKey] as? CGPoint else {
+        // Check condition with tracking for only prepare view when still scrolling.
+        if keyPath == "contentOffset" && isInfinite && self.tracking {
+            guard let change = change, let oldOffset = change[NSKeyValueChangeOldKey]?.CGPointValue() else {
                 return
             }
             
@@ -104,8 +105,6 @@ public class CarouselView: UIScrollView {
             
             prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
             
-        } else {
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
     }
     
@@ -121,7 +120,18 @@ public class CarouselView: UIScrollView {
     }
     
     private func prepareViewForInfiniteInlusion(direction: ScrollDirection) {
-        
+        switch direction {
+        case .Left:
+            print("Left")
+        case .Right:
+            print("Right")
+        case .Top:
+            break
+        case .Down:
+            break
+        default:
+            break
+        }
     }
 }
 
