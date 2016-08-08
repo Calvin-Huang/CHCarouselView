@@ -148,6 +148,22 @@ public class CarouselView: UIScrollView {
                 view.frame = CGRect(origin: viewOffset, size: self.bounds.size)
             }
     }
+    
+    private func shiftToRealViewPosition() {
+        let viewsCount = CGFloat(views.count)
+        
+        if self.contentOffset.x <= 0 {
+            self.contentOffset = CGPoint(x: viewsCount * self.bounds.size.width, y: 0)
+            
+            resetInfiniteContentShift()
+            
+        } else if self.contentOffset.x >= (viewsCount + 1) * self.bounds.size.width {
+            self.contentOffset = CGPointMake(self.bounds.size.width, 0)
+            
+            resetInfiniteContentShift()
+        }
+
+    }
 }
 
 // MARK: - ScrollViewDelegate
