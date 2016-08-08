@@ -35,6 +35,10 @@ public class CarouselView: UIScrollView {
     }
     public var selectedCallback: ((currentPage: Int) -> ())?
     
+    private var canInfinite: Bool {
+        return isInfinite && views.count > 1
+    }
+    
     private enum ScrollDirection {
         case None
         case Top
@@ -95,6 +99,7 @@ public class CarouselView: UIScrollView {
         
         // Check condition with tracking for only prepare view when still scrolling.
         if keyPath == "contentOffset" && isInfinite && self.tracking {
+        if keyPath == "contentOffset" && canInfinite && self.tracking {
             guard let change = change, let oldOffset = change[NSKeyValueChangeOldKey]?.CGPointValue() else {
                 return
             }
