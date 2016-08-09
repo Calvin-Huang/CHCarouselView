@@ -125,11 +125,46 @@ public class CarouselView: UIScrollView {
     }
     
     private func prepareViewForInfiniteInlusion(direction: ScrollDirection) {
+        let viewsCount = CGFloat(views.count)
+        
         switch direction {
         case .Left:
-            print("Left")
+            if self.contentOffset.x <= self.bounds.size.width {
+                guard let lastView = views.last else {
+                    return
+                }
+                
+                lastView.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+                
+            } else if self.contentOffset.x >= viewsCount * self.bounds.size.width {
+                guard let firstView = views.first else {
+                    return
+                }
+                
+                firstView.frame = CGRect(x: (viewsCount + 1) * self.bounds.size.width, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+                
+            } else {
+                resetInfiniteContentShift()
+            }
+
         case .Right:
-            print("Right")
+            if self.contentOffset.x >= viewsCount * self.bounds.size.width {
+                guard let firstView = views.first else {
+                    return
+                }
+                
+                firstView.frame = CGRect(x: (viewsCount + 1) * self.bounds.size.width, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+                
+            } else if self.contentOffset.x <= self.bounds.size.width {
+                guard let lastView = views.last else {
+                    return
+                }
+                
+                lastView.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+                
+            } else {
+                resetInfiniteContentShift()
+            }
         case .Top:
             break
         case .Down:
