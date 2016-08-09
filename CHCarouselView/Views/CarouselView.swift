@@ -204,7 +204,27 @@ public class CarouselView: UIScrollView {
 // MARK: - ScrollViewDelegate
 extension CarouselView: UIScrollViewDelegate {
     public func scrollViewDidScroll(scrollView: UIScrollView) {
-        let remainder: CGFloat = scrollView.contentOffset.x % self.bounds.width
-        currentPage = Int(scrollView.contentOffset.x / self.bounds.size.width + ((remainder > self.bounds.size.width / 2) ? 1 : 0))
+        let offsetX: Int = Int(scrollView.contentOffset.x)
+        let width: Int = Int(self.bounds.width)
+        
+        let remainder: Int = offsetX % width
+        var page: Int = offsetX / width + ((remainder > width / 2) ? 1 : 0)
+        
+        if canInfinite {
+            if page == 0 {
+                page = views.count - 1
+                
+            } else if page == views.count + 1 {
+                page = 0
+                
+            } else {
+                page = page - 1
+            }
+            
+            shiftToRealViewPosition()
+        }
+        
+        currentPage = page
+    }
     }
 }
