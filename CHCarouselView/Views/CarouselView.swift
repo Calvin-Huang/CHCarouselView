@@ -226,5 +226,10 @@ extension CarouselView: UIScrollViewDelegate {
         
         currentPage = page
     }
+    
+    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if canInfinite {
+            resetInfiniteContentShift()
+        }
     }
 }
