@@ -193,7 +193,7 @@ public class CarouselView: UIScrollView {
             resetInfiniteContentShift()
             
         } else if self.contentOffset.x >= (viewsCount + 1) * self.bounds.size.width {
-            self.contentOffset = CGPointMake(self.bounds.size.width, 0)
+            self.contentOffset = CGPoint(x: self.bounds.size.width, y: 0)
             
             resetInfiniteContentShift()
         }
