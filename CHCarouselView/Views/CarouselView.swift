@@ -64,6 +64,8 @@ public class CarouselView: UIScrollView {
             }
         }
     }
+    
+    private var timer: NSTimer?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,6 +81,9 @@ public class CarouselView: UIScrollView {
     
     deinit {
         self.removeObserver(self, forKeyPath: "contentOffset")
+        
+        timer?.invalidate()
+        timer = nil
     }
     
     override public func drawRect(rect: CGRect) {
@@ -124,6 +129,11 @@ public class CarouselView: UIScrollView {
         }
     }
     
+    // MARK: - Selectors
+    public func autoScrollToNextPage(_: AnyObject) {
+        
+    }
+    
     // MARK: - Private Methods
     private func configure() {
         self.delegate = self
@@ -133,6 +143,10 @@ public class CarouselView: UIScrollView {
         self.scrollsToTop = false
         
         self.addObserver(self, forKeyPath: "contentOffset", options: .Old, context: nil)
+        
+        if canInfinite {
+            timer = NSTimer(timeInterval: 0.2, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
+        }
     }
     
     private func prepareViewForInfiniteInlusion(direction: ScrollDirection) {
