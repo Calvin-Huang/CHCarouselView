@@ -22,6 +22,12 @@ class ViewController: UIViewController {
             "https://dl.dropboxusercontent.com/u/108987767/Meme/1557643_489616404482423_780202608_n.jpg",
         ]
         
+        carouselView.selectedCallback = { [unowned self] (currentPage: Int) in
+            let alertController = UIAlertController(title: nil, message: "You selected page: \(currentPage) in carousel.", preferredStyle: .Alert)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
+        
         carouselView.views = imageUrls
                                 .map { url -> UIImageView in
                                     let imageView = UIImageView()
