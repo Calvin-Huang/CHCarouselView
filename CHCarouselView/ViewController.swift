@@ -25,6 +25,8 @@ class ViewController: UIViewController {
         carouselView.selectedCallback = { [unowned self] (currentPage: Int) in
             let alertController = UIAlertController(title: nil, message: "You selected page: \(currentPage) in carousel.", preferredStyle: .Alert)
             
+            alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            
             self.presentViewController(alertController, animated: true, completion: nil)
         }
         
