@@ -97,6 +97,17 @@ public class CarouselView: UIScrollView {
         self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPointZero
     }
     
+    // MARK: - Override Methods
+    override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesBegan(touches, withEvent: event)
+        
+        guard let selectedCallback = selectedCallback else {
+            return
+        }
+        
+        selectedCallback(currentPage: currentPage)
+    }
+    
     // MARK: - KVO Delegate
     override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
