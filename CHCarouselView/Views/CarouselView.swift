@@ -8,62 +8,69 @@
 
 import UIKit
 
-public class CarouselView: UIScrollView {
+open class CarouselView: UIScrollView {
     @IBOutlet weak var pageControl: UIPageControl?
-    @IBOutlet public var views: [UIView] = []
+    @IBOutlet open var views: [UIView] = []
     
-    @IBInspectable public var isInfinite: Bool = false
+    @IBInspectable open var isInfinite: Bool = false
+    @IBInspectable open var interval: Double = 0
+    @IBInspectable open var animationDuration: Double = 0.3
     
-    public var currentPage: Int {
+    open var currentPage: Int {
         set {
             switch pageControl {
-            case .None:
+            case .none:
                 self.currentPage = newValue
-            case .Some(let pageControl):
+            case .some(let pageControl):
                 pageControl.currentPage = newValue
             }
         }
         
         get {
             switch pageControl {
-            case .None:
+            case .none:
                 return self.currentPage
-            case .Some(let pageControl):
+            case .some(let pageControl):
                 return pageControl.currentPage
             }
         }
     }
-    public var selectedCallback: ((currentPage: Int) -> ())?
+    open var selected: ((_ currentPage: Int) -> Void)?
+    open var isPaused: Bool {
+        return timer == nil
+    }
     
-    private var canInfinite: Bool {
+    fileprivate var canInfinite: Bool {
         return isInfinite && views.count > 1
     }
     
-    private enum ScrollDirection {
-        case None
-        case Top
-        case Right
-        case Down
-        case Left
+    fileprivate enum ScrollDirection {
+        case none
+        case top
+        case right
+        case down
+        case left
         
         init(fromPoint: CGPoint, toPoint: CGPoint) {
             if fromPoint.x - toPoint.x < 0 && fromPoint.y == toPoint.y {
-                self = .Left
+                self = .left
                 
             } else if fromPoint.x - toPoint.x > 0 && fromPoint.y == toPoint.y {
-                self = .Right
+                self = .right
                 
             } else if fromPoint.x == toPoint.x && fromPoint.y - toPoint.y < 0 {
-                self = .Down
+                self = .down
                 
             } else if fromPoint.x == toPoint.x && fromPoint.y - toPoint.y > 0 {
-                self = .Top
+                self = .top
                 
             } else {
-                self = .None
+                self = .none
             }
         }
     }
+    
+    fileprivate var timer: Timer?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,9 +86,12 @@ public class CarouselView: UIScrollView {
     
     deinit {
         self.removeObserver(self, forKeyPath: "contentOffset")
+        
+        timer?.invalidate()
+        timer = nil
     }
     
-    override public func drawRect(rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         resetInfiniteContentShift()
         
         views
@@ -94,41 +104,81 @@ public class CarouselView: UIScrollView {
         let viewsCountWithInfiniteMock = (canInfinite ? 2 : 0) + views.count
         
         self.contentSize = CGSize(width: CGFloat(viewsCountWithInfiniteMock) * self.bounds.width, height: self.bounds.height)
-        self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPointZero
+        self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPoint.zero
+        
+        if canInfinite && interval > 0 {
+            timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
+        }
+    }
+    
+    // MARK: - Override Methods
+    override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        
+        selected?(currentPage)
     }
     
     // MARK: - KVO Delegate
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         // Check condition with tracking for only prepare view when still scrolling.
-        if keyPath == "contentOffset" && canInfinite && self.tracking {
-            guard let change = change, let oldOffset = change[NSKeyValueChangeOldKey]?.CGPointValue() else {
+        if keyPath == "contentOffset" && canInfinite && self.isTracking {
+            guard let change = change, let oldOffset = (change[NSKeyValueChangeKey.oldKey] as AnyObject?)?.cgPointValue else {
                 return
             }
             
             let newOffset = self.contentOffset
             
             prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
-            
         }
     }
     
+    // MARK: - Selectors
+    internal func autoScrollToNextPage(_: AnyObject) {
+        UIView.animate(withDuration: animationDuration, animations: { 
+            var nextPage = self.currentPage + 1
+            
+            if self.canInfinite {
+                nextPage = nextPage + 1
+                
+            } else if nextPage >= self.views.count {
+                nextPage = 0
+            }
+            
+            self.contentOffset = CGPoint(x: CGFloat(nextPage) * self.bounds.width, y: 0)
+        }) 
+    }
+    
+    // MARK: - Public Methods
+    open func pause() {
+        guard let _ = timer else { return }
+        
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    open func start() {
+        if let _ = timer { return }
+        
+        timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
+    }
+    
     // MARK: - Private Methods
-    private func configure() {
+    fileprivate func configure() {
         self.delegate = self
-        self.pagingEnabled = true
+        self.isPagingEnabled = true
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
         self.scrollsToTop = false
         
-        self.addObserver(self, forKeyPath: "contentOffset", options: .Old, context: nil)
+        self.addObserver(self, forKeyPath: "contentOffset", options: .old, context: nil)
     }
     
-    private func prepareViewForInfiniteInlusion(direction: ScrollDirection) {
+    fileprivate func prepareViewForInfiniteInlusion(_ direction: ScrollDirection) {
         let viewsCount = CGFloat(views.count)
         
         switch direction {
-        case .Left:
+        case .left:
             if self.contentOffset.x <= self.bounds.size.width {
                 guard let lastView = views.last else {
                     return
@@ -147,7 +197,7 @@ public class CarouselView: UIScrollView {
                 resetInfiniteContentShift()
             }
 
-        case .Right:
+        case .right:
             if self.contentOffset.x >= viewsCount * self.bounds.size.width {
                 guard let firstView = views.first else {
                     return
@@ -165,18 +215,18 @@ public class CarouselView: UIScrollView {
             } else {
                 resetInfiniteContentShift()
             }
-        case .Top:
+        case .top:
             break
-        case .Down:
+        case .down:
             break
         default:
             break
         }
     }
     
-    private func resetInfiniteContentShift() {
+    fileprivate func resetInfiniteContentShift() {
         views
-            .enumerate()
+            .enumerated()
             .forEach { (index: Int, view: UIView) in
                 let indexShiftted = isInfinite ? index + 1 : index
                 let viewOffset = CGPoint(x: CGFloat(indexShiftted) * self.bounds.width, y: 0)
@@ -184,7 +234,7 @@ public class CarouselView: UIScrollView {
             }
     }
     
-    private func shiftToRealViewPosition() {
+    fileprivate func shiftToRealViewPosition() {
         let viewsCount = CGFloat(views.count)
         
         if self.contentOffset.x <= 0 {
@@ -203,7 +253,7 @@ public class CarouselView: UIScrollView {
 
 // MARK: - ScrollViewDelegate
 extension CarouselView: UIScrollViewDelegate {
-    public func scrollViewDidScroll(scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetX: Int = Int(scrollView.contentOffset.x)
         let width: Int = Int(self.bounds.width)
         
@@ -227,7 +277,7 @@ extension CarouselView: UIScrollViewDelegate {
         currentPage = page
     }
     
-    public func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if canInfinite {
             resetInfiniteContentShift()
         }

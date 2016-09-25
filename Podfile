@@ -6,7 +6,7 @@ target 'CHCarouselView' do
   use_frameworks!
 
   # Pods for CHCarouselView
-  pod 'Kingfisher'
+  pod 'Kingfisher', '~> 3.0'
 
   target 'CHCarouselViewTests' do
     inherit! :search_paths
