@@ -40,5 +40,15 @@ class ViewController: UIViewController {
                                     return imageView
                                 }
     }
+    
+    @IBAction func startOrPauseCarouselButtonClicked(_: AnyObject) {
+        if carouselView.isPaused {
+            carouselView.start()
+        } else {
+            carouselView.pause()
+        }
+        
+        print("is paused: \(carouselView.isPaused)")
+    }
 }
 

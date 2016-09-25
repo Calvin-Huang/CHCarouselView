@@ -36,6 +36,9 @@ open class CarouselView: UIScrollView {
         }
     }
     open var selected: ((_ currentPage: Int) -> Void)?
+    open var isPaused: Bool {
+        return timer == nil
+    }
     
     fileprivate var canInfinite: Bool {
         return isInfinite && views.count > 1
@@ -131,7 +134,7 @@ open class CarouselView: UIScrollView {
     }
     
     // MARK: - Selectors
-    open func autoScrollToNextPage(_: AnyObject) {
+    internal func autoScrollToNextPage(_: AnyObject) {
         UIView.animate(withDuration: animationDuration, animations: { 
             var nextPage = self.currentPage + 1
             
@@ -144,6 +147,20 @@ open class CarouselView: UIScrollView {
             
             self.contentOffset = CGPoint(x: CGFloat(nextPage) * self.bounds.width, y: 0)
         }) 
+    }
+    
+    // MARK: - Public Methods
+    open func pause() {
+        guard let _ = timer else { return }
+        
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    open func start() {
+        if let _ = timer { return }
+        
+        timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
     }
     
     // MARK: - Private Methods
