@@ -22,23 +22,33 @@ class ViewController: UIViewController {
             "https://dl.dropboxusercontent.com/u/108987767/Meme/1557643_489616404482423_780202608_n.jpg",
         ]
         
-        carouselView.selectedCallback = { [unowned self] (currentPage: Int) in
-            let alertController = UIAlertController(title: nil, message: "You selected page: \(currentPage) in carousel.", preferredStyle: .Alert)
+        carouselView.selected = { [unowned self] (currentPage: Int) in
+            let alertController = UIAlertController(title: nil, message: "You selected page: \(currentPage) in carousel.", preferredStyle: .alert)
             
-            alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
-            self.presentViewController(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         }
         
         carouselView.views = imageUrls
                                 .map { url -> UIImageView in
                                     let imageView = UIImageView()
-                                    imageView.kf_setImageWithURL(NSURL(string: url)!)
-                                    imageView.contentMode = .ScaleAspectFill
+                                    imageView.kf.setImage(with: URL(string: url)!)
+                                    imageView.contentMode = .scaleAspectFill
                                     imageView.clipsToBounds = true
                                     
                                     return imageView
                                 }
+    }
+    
+    @IBAction func startOrPauseCarouselButtonClicked(_: AnyObject) {
+        if carouselView.isPaused {
+            carouselView.start()
+        } else {
+            carouselView.pause()
+        }
+        
+        print("is paused: \(carouselView.isPaused)")
     }
 }
 
