@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  s.source_files  = "CHCarouselView/Views/CHCarouselView.swift"
+  s.source_files  = "CHCarouselView/Views/CarouselView.swift"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
