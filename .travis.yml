@@ -6,4 +6,4 @@ before_install:
    - sudo gem install cocoapods
    - pod repo update
 
-script: xcodebuild -workspace CHCarouselView.xcworkspace -scheme CHCarouselView -sdk iphonesimulator
+script: xcodebuild -workspace CHCarouselView.xcworkspace -scheme CHCarouselView -destination 'platform=iOS Simulator,name=iPhone 7,OS=10.0' -sdk iphonesimulator
