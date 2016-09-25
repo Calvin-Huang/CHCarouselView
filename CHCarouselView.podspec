@@ -14,7 +14,8 @@ Pod::Spec.new do |s|
   s.summary      = "Ease use, convenience and flexible carousel."
 
   s.description  = <<-DESC
-                      Ease use, convenience and flexible carousel
+                      Ease use, convenience and flexible carousel.
+                      You can build dynamic animated by using CHCarouselView.
                     DESC
 
   s.homepage     = "https://blog.capslock.tw/"
