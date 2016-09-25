@@ -104,8 +104,7 @@ open class CarouselView: UIScrollView {
         self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPoint.zero
         
         if canInfinite && interval > 0 {
-            print("Added timer: \(interval)")
-            timer = Timer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
         }
     }
     
@@ -133,7 +132,6 @@ open class CarouselView: UIScrollView {
     
     // MARK: - Selectors
     open func autoScrollToNextPage(_: AnyObject) {
-        print("Timer executed")
         UIView.animate(withDuration: animationDuration, animations: { 
             var nextPage = self.currentPage + 1
             
