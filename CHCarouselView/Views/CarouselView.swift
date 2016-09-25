@@ -121,14 +121,13 @@ open class CarouselView: UIScrollView {
         
         // Check condition with tracking for only prepare view when still scrolling.
         if keyPath == "contentOffset" && canInfinite && self.isTracking {
-            guard let change = change, let oldOffset = (change[NSKeyValueChangeKey.oldKey] as AnyObject).cgPointValue else {
+            guard let change = change, let oldOffset = (change[NSKeyValueChangeKey.oldKey] as AnyObject?)?.cgPointValue else {
                 return
             }
             
             let newOffset = self.contentOffset
             
             prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
-            
         }
     }
     
