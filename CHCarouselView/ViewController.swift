@@ -41,6 +41,18 @@ class ViewController: UIViewController {
                                 }
     }
     
+    @IBAction func changeContentToColoredViewsButtonClicked(_: AnyObject) {
+        let colors = [ Color.blue, Color.yellow, Color.gray, Color.brown, Color.red ]
+        
+        carouselView.views = colors
+            .map { color -> UIView in
+                let view = UIView()
+                view.backgroundColor = color
+                
+                return view
+            }
+    }
+    
     @IBAction func startOrPauseCarouselButtonClicked(_: AnyObject) {
         if carouselView.isPaused {
             carouselView.start()
