@@ -12,9 +12,15 @@ open class CarouselView: UIScrollView {
     @IBOutlet weak var pageControl: UIPageControl?
     @IBOutlet open var views: [UIView] = [] {
         willSet {
-            self.views.forEach { (view) in
+            views.forEach { (view) in
                 view.removeFromSuperview()
             }
+            
+            pause()
+        }
+        
+        didSet {
+            self.setNeedsDisplay()
         }
     }
     
