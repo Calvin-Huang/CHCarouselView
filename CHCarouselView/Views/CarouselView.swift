@@ -132,20 +132,26 @@ open class CarouselView: UIScrollView {
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         // Check condition with tracking for only prepare view when still scrolling.
-        if keyPath == "contentOffset" && canInfinite && self.isTracking {
+        if keyPath == "contentOffset" && canInfinite {
             guard let change = change, let oldOffset = (change[NSKeyValueChangeKey.oldKey] as AnyObject?)?.cgPointValue else {
                 return
             }
             
-            let newOffset = self.contentOffset
-            
-            prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
+            if self.isTracking {
+                let newOffset = self.contentOffset
+                
+                prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
+                
+                pause()
+            } else {
+                start()
+            }
         }
     }
     
     // MARK: - Selectors
     internal func autoScrollToNextPage(_: AnyObject) {
-        UIView.animate(withDuration: animationDuration, animations: { 
+        UIView.animate(withDuration: animationDuration, animations: {
             var nextPage = self.currentPage + 1
             
             if self.canInfinite {
