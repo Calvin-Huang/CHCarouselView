@@ -72,6 +72,7 @@ open class CarouselView: UIScrollView {
     
     fileprivate var timer: Timer?
 
+    // MARK: Initializers
     override public init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -91,7 +92,8 @@ open class CarouselView: UIScrollView {
         timer = nil
     }
     
-    override open func draw(_ rect: CGRect) {
+    // MARK: UIView Delegate
+    open override func draw(_ rect: CGRect) {
         resetInfiniteContentShift()
         
         views
