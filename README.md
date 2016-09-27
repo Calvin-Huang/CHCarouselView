@@ -9,7 +9,7 @@ CHCarousel provide you carousel maximum free to customize and extremely easy to 
  - [x] Slide to change views.
  - [x] Selected page callback.
  - [x] Automatically cycle.
- - [ ] Change item's content view.
- - [ ] Unit test.
+ - [x] Change item's content view.
+ - [x] Unit test.
  - [ ] Sliding progress indicator.
  - [ ] Parallel effect example.
