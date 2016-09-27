@@ -31,14 +31,14 @@ class ViewController: UIViewController {
         }
         
         carouselView.views = imageUrls
-                                .map { url -> UIImageView in
-                                    let imageView = UIImageView()
-                                    imageView.kf.setImage(with: URL(string: url)!)
-                                    imageView.contentMode = .scaleAspectFill
-                                    imageView.clipsToBounds = true
-                                    
-                                    return imageView
-                                }
+            .map { url -> UIImageView in
+                let imageView = UIImageView()
+                imageView.kf.setImage(with: URL(string: url)!)
+                imageView.contentMode = .scaleAspectFill
+                imageView.clipsToBounds = true
+                
+                return imageView
+            }
     }
     
     @IBAction func changeContentToColoredViewsButtonClicked(_: AnyObject) {
