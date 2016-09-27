@@ -92,6 +92,14 @@ open class CarouselView: UIScrollView {
         timer = nil
     }
     
+    // MARK: Life Cycle
+    open override func removeFromSuperview() {
+        super.removeFromSuperview()
+        
+        timer?.invalidate()
+        timer = nil
+    }
+    
     // MARK: UIView Delegate
     open override func draw(_ rect: CGRect) {
         resetInfiniteContentShift()
