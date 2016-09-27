@@ -10,7 +10,13 @@ import UIKit
 
 open class CarouselView: UIScrollView {
     @IBOutlet weak var pageControl: UIPageControl?
-    @IBOutlet open var views: [UIView] = []
+    @IBOutlet open var views: [UIView] = [] {
+        willSet {
+            self.views.forEach { (view) in
+                view.removeFromSuperview()
+            }
+        }
+    }
     
     @IBInspectable open var isInfinite: Bool = false
     @IBInspectable open var interval: Double = 0
