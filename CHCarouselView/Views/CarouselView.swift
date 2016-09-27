@@ -10,7 +10,19 @@ import UIKit
 
 open class CarouselView: UIScrollView {
     @IBOutlet weak var pageControl: UIPageControl?
-    @IBOutlet open var views: [UIView] = []
+    @IBOutlet open var views: [UIView] = [] {
+        willSet {
+            views.forEach { (view) in
+                view.removeFromSuperview()
+            }
+            
+            pause()
+        }
+        
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
     
     @IBInspectable open var isInfinite: Bool = false
     @IBInspectable open var interval: Double = 0
@@ -72,6 +84,7 @@ open class CarouselView: UIScrollView {
     
     fileprivate var timer: Timer?
 
+    // MARK: Initializers
     override public init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -91,7 +104,16 @@ open class CarouselView: UIScrollView {
         timer = nil
     }
     
-    override open func draw(_ rect: CGRect) {
+    // MARK: Life Cycle
+    open override func removeFromSuperview() {
+        super.removeFromSuperview()
+        
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    // MARK: UIView Delegate
+    open override func draw(_ rect: CGRect) {
         resetInfiniteContentShift()
         
         views
@@ -107,35 +129,41 @@ open class CarouselView: UIScrollView {
         self.contentOffset = canInfinite ? CGPoint(x: self.bounds.width, y: 0) : CGPoint.zero
         
         if canInfinite && interval > 0 {
-            timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
+            start()
         }
     }
     
     // MARK: - Override Methods
-    override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
         selected?(currentPage)
     }
     
     // MARK: - KVO Delegate
-    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         // Check condition with tracking for only prepare view when still scrolling.
-        if keyPath == "contentOffset" && canInfinite && self.isTracking {
+        if keyPath == "contentOffset" && canInfinite {
             guard let change = change, let oldOffset = (change[NSKeyValueChangeKey.oldKey] as AnyObject?)?.cgPointValue else {
                 return
             }
             
-            let newOffset = self.contentOffset
-            
-            prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
+            if self.isTracking {
+                let newOffset = self.contentOffset
+                
+                prepareViewForInfiniteInlusion(ScrollDirection(fromPoint: oldOffset, toPoint: newOffset))
+                
+                pause()
+            } else {
+                start()
+            }
         }
     }
     
     // MARK: - Selectors
     internal func autoScrollToNextPage(_: AnyObject) {
-        UIView.animate(withDuration: animationDuration, animations: { 
+        UIView.animate(withDuration: animationDuration, animations: {
             var nextPage = self.currentPage + 1
             
             if self.canInfinite {
@@ -158,7 +186,7 @@ open class CarouselView: UIScrollView {
     }
     
     open func start() {
-        if let _ = timer { return }
+        if timer != nil || interval <= 0 { return }
         
         timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(autoScrollToNextPage(_:)), userInfo: nil, repeats: true)
     }
