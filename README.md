@@ -13,3 +13,4 @@ CHCarousel provide you carousel maximum free to customize and extremely easy to 
  - [x] Unit test.
  - [ ] Sliding progress indicator.
  - [ ] Parallel effect example.
+ - [ ] Make REAME file complete.
